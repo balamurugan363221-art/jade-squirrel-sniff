@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { BookOpen, BrainCircuit, CheckCircle, XCircle } from 'lucide-react';
+import { BookOpen, BrainCircuit, CheckCircle, XCircle, Trash2 } from 'lucide-react';
 import { showSuccess, showError } from '@/utils/toast';
 import { api } from '@/lib/api'; // Import the API utility
+import Flashcard from '@/components/Flashcard'; // Import the new Flashcard component
 
 interface QuizQuestion {
   id: string;
@@ -17,7 +18,7 @@ interface QuizQuestion {
   isCorrect?: boolean;
 }
 
-interface Flashcard {
+interface FlashcardType { // Renamed to avoid conflict with component
   id: string;
   front: string;
   back: string;
@@ -26,7 +27,7 @@ interface Flashcard {
 
 const QuizzesFlashcardsTab: React.FC = () => {
   const [generatedQuizzes, setGeneratedQuizzes] = useState<QuizQuestion[]>([]);
-  const [generatedFlashcards, setGeneratedFlashcards] = useState<Flashcard[]>([]);
+  const [generatedFlashcards, setGeneratedFlashcards] = useState<FlashcardType[]>([]);
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuizAnswers, setCurrentQuizAnswers] = useState<{ [key: string]: string }>({});
   const [quizScore, setQuizScore] = useState<number | null>(null);
@@ -91,7 +92,7 @@ const QuizzesFlashcardsTab: React.FC = () => {
     try {
       const response = await api.ai.generateFlashcards(sampleText);
       // Using dummy flashcards for now as API returns empty array
-      const dummyFlashcards: Flashcard[] = [
+      const dummyFlashcards: FlashcardType[] = [
         { id: 'f1', front: 'Capital of France', back: 'Paris' },
         { id: 'f2', front: 'Location of Eiffel Tower', back: 'Paris' },
         { id: 'f3', front: 'Currency of France', back: 'Euro' },
@@ -130,6 +131,11 @@ const QuizzesFlashcardsTab: React.FC = () => {
     setQuizScore(score);
     setQuizStarted(false);
     showSuccess(`Quiz completed! Your score: ${score}/${generatedQuizzes.length}`);
+  };
+
+  const handleClearFlashcards = () => {
+    setGeneratedFlashcards([]);
+    showSuccess('Flashcards cleared!');
   };
 
   return (
@@ -229,12 +235,16 @@ const QuizzesFlashcardsTab: React.FC = () => {
               <h3 className="text-lg font-semibold">Generated Flashcards:</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {generatedFlashcards.map((card) => (
-                  <Card key={card.id} className="p-4 flex flex-col items-center justify-center text-center min-h-[120px]">
-                    <p className="font-medium text-lg mb-2">{card.front}</p>
-                    <p className="text-muted-foreground">({card.back})</p>
-                  </Card>
+                  <Flashcard key={card.id} front={card.front} back={card.back} />
                 ))}
               </div>
+              <Button
+                variant="destructive"
+                onClick={handleClearFlashcards}
+                className="w-full flex items-center gap-2"
+              >
+                <Trash2 className="h-4 w-4" /> Clear Flashcards
+              </Button>
             </div>
           )}
         </CardContent>
