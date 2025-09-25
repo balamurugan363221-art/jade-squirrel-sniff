@@ -1,10 +1,12 @@
+"use client";
+
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { showSuccess, showError } from '@/utils/toast'; // Assuming you have these toast utilities
+import { useAuth } from '@/context/AuthContext'; // Import useAuth
 
 interface AuthFormProps {
   type: 'login' | 'register';
@@ -13,32 +15,14 @@ interface AuthFormProps {
 const AuthForms: React.FC<AuthFormProps> = ({ type }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const { login, register, loading } = useAuth(); // Use the auth hook
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      // Placeholder for actual authentication logic
-      if (type === 'login') {
-        console.log('Attempting login with:', email, password);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        showSuccess('Logged in successfully!');
-        navigate('/dashboard');
-      } else {
-        console.log('Attempting registration with:', email, password);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        showSuccess('Registered successfully! Please log in.');
-        navigate('/login');
-      }
-    } catch (error) {
-      console.error('Auth error:', error);
-      showError(`Failed to ${type}. Please try again.`);
-    } finally {
-      setLoading(false);
+    if (type === 'login') {
+      await login(email, password);
+    } else {
+      await register(email, password);
     }
   };
 
