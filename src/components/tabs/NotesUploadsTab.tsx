@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload, FileText, MessageSquareText, Lightbulb } from 'lucide-react';
 import { showSuccess, showError } from '@/utils/toast';
+import { api } from '@/lib/api'; // Import the API utility
 
 const NotesUploadsTab: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -32,10 +33,8 @@ const NotesUploadsTab: React.FC = () => {
     setLoading(true);
     showSuccess('Uploading file and performing OCR...');
     try {
-      // Placeholder for actual OCR API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      const dummyText = `This is some extracted text from your ${file.name}. It talks about the history of artificial intelligence, from early philosophical ideas to modern machine learning algorithms. Key milestones include the Dartmouth Workshop in 1956, the development of expert systems in the 1970s, and the resurgence of neural networks in the 2000s. AI is now used in various fields like healthcare, finance, and education.`;
-      setExtractedText(dummyText);
+      const response = await api.ocr.extractText(file);
+      setExtractedText(response.text);
       showSuccess('Text extracted successfully!');
     } catch (error) {
       console.error('OCR error:', error);
@@ -53,10 +52,8 @@ const NotesUploadsTab: React.FC = () => {
     setLoading(true);
     showSuccess('Summarizing text...');
     try {
-      // Placeholder for AI summarization API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      const dummySummary = 'Artificial intelligence has a rich history, evolving from early concepts to modern applications. Significant events include the 1956 Dartmouth Workshop, expert systems, and recent advancements in neural networks, impacting sectors like healthcare and education.';
-      setSummary(dummySummary);
+      const response = await api.ai.summarize(extractedText);
+      setSummary(response.summary);
       showSuccess('Text summarized!');
     } catch (error) {
       console.error('Summarization error:', error);
@@ -74,10 +71,8 @@ const NotesUploadsTab: React.FC = () => {
     setLoading(true);
     showSuccess('Asking AI tutor...');
     try {
-      // Placeholder for AI Q&A API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      const dummyAnswer = `Hello there! Based on the text, the Dartmouth Workshop in 1956 is often considered the birth of AI as an academic field. It was a pivotal moment where the term "artificial intelligence" was coined and researchers gathered to discuss the potential of thinking machines.`;
-      setAnswer(dummyAnswer);
+      const response = await api.ai.askQuestion(extractedText, question);
+      setAnswer(response.answer);
       showSuccess('Answer received!');
     } catch (error) {
       console.error('Q&A error:', error);

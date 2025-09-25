@@ -8,7 +8,8 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import AuthForms from "./components/auth/AuthForms";
 import NotFound from "./pages/NotFound";
-import { AuthProvider } from "./context/AuthContext"; // Import AuthProvider
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 
 const queryClient = new QueryClient();
 
@@ -18,13 +19,21 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthProvider> {/* Wrap with AuthProvider */}
+        <AuthProvider>
           <MainLayout>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/login" element={<AuthForms type="login" />} />
               <Route path="/register" element={<AuthForms type="register" />} />
+              {/* Protected Dashboard Route */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { BookOpen, BrainCircuit, CheckCircle, XCircle } from 'lucide-react';
 import { showSuccess, showError } from '@/utils/toast';
+import { api } from '@/lib/api'; // Import the API utility
 
 interface QuizQuestion {
   id: string;
@@ -32,6 +33,7 @@ const QuizzesFlashcardsTab: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   // Placeholder for text to generate quizzes from (would come from NotesUploadsTab)
+  // In a real app, this would be passed down or fetched from a shared state/context
   const sampleText = "The capital of France is Paris. The Eiffel Tower is located in Paris. France is in Europe. The currency used in France is the Euro.";
 
   const handleGenerateQuizzes = async () => {
@@ -42,8 +44,8 @@ const QuizzesFlashcardsTab: React.FC = () => {
     setLoading(true);
     showSuccess('Generating quizzes...');
     try {
-      // Placeholder for AI quiz generation API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const response = await api.ai.generateQuizzes(sampleText);
+      // Using dummy quizzes for now as API returns empty array
       const dummyQuizzes: QuizQuestion[] = [
         {
           id: 'q1',
@@ -66,7 +68,7 @@ const QuizzesFlashcardsTab: React.FC = () => {
           correctAnswer: 'Europe',
         },
       ];
-      setGeneratedQuizzes(dummyQuizzes);
+      setGeneratedQuizzes(response.quizzes.length > 0 ? response.quizzes : dummyQuizzes);
       setQuizStarted(false);
       setQuizScore(null);
       setCurrentQuizAnswers({});
@@ -87,14 +89,14 @@ const QuizzesFlashcardsTab: React.FC = () => {
     setLoading(true);
     showSuccess('Generating flashcards...');
     try {
-      // Placeholder for AI flashcard generation API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const response = await api.ai.generateFlashcards(sampleText);
+      // Using dummy flashcards for now as API returns empty array
       const dummyFlashcards: Flashcard[] = [
         { id: 'f1', front: 'Capital of France', back: 'Paris' },
         { id: 'f2', front: 'Location of Eiffel Tower', back: 'Paris' },
         { id: 'f3', front: 'Currency of France', back: 'Euro' },
       ];
-      setGeneratedFlashcards(dummyFlashcards);
+      setGeneratedFlashcards(response.flashcards.length > 0 ? response.flashcards : dummyFlashcards);
       showSuccess('Flashcards generated!');
     } catch (error) {
       console.error('Flashcard generation error:', error);

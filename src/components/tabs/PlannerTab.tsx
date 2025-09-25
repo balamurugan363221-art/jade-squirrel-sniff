@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { CalendarDays, Goal, BellRing, Brain } from 'lucide-react';
 import { showSuccess, showError } from '@/utils/toast';
+import { api } from '@/lib/api'; // Import the API utility
 
 interface StudyGoal {
   id: string;
@@ -80,8 +81,9 @@ const PlannerTab: React.FC = () => {
     setLoading(true);
     showSuccess('Generating revision schedule...');
     try {
-      // Placeholder for AI recommendation API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // In a real app, you'd pass actual user ID and progress data
+      const response = await api.ai.recommendRevision('currentUserId', { /* user progress data */ });
+      console.log('AI Recommendation:', response.schedule);
       showSuccess('AI revision schedule recommended!');
       // In a real app, this would update goals/reminders or display a recommendation
     } catch (error) {
