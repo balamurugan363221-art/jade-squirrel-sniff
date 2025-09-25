@@ -19,7 +19,7 @@ const Flashcard: React.FC<FlashcardProps> = ({ front, back }) => {
   return (
     <Card
       className={cn(
-        "relative h-48 w-full cursor-pointer perspective-1000",
+        "relative h-48 w-full cursor-pointer perspective-1000 transform-style-3d", // Added transform-style-3d
         "transform-gpu transition-transform duration-500 ease-in-out",
         isFlipped ? "rotate-y-180" : ""
       )}
