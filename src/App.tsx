@@ -9,7 +9,8 @@ import Dashboard from "./pages/Dashboard";
 import AuthForms from "./components/auth/AuthForms";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./context/AuthContext";
-import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
+import ProtectedRoute from "./components/ProtectedRoute";
+import { ThemeProvider } from "./components/theme-provider"; // Import ThemeProvider
 
 const queryClient = new QueryClient();
 
@@ -20,24 +21,26 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <MainLayout>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<AuthForms type="login" />} />
-              <Route path="/register" element={<AuthForms type="register" />} />
-              {/* Protected Dashboard Route */}
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </MainLayout>
+          <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme"> {/* Wrap with ThemeProvider */}
+            <MainLayout>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<AuthForms type="login" />} />
+                <Route path="/register" element={<AuthForms type="register" />} />
+                {/* Protected Dashboard Route */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </MainLayout>
+          </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

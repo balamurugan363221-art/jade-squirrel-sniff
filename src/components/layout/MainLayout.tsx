@@ -13,18 +13,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAuth } from '@/context/AuthContext'; // Import useAuth
+import { useAuth } from '@/context/AuthContext';
+import ThemeToggle from '@/components/ThemeToggle'; // Import ThemeToggle
 
 interface MainLayoutProps {
   children: React.ReactNode;
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const { isAuthenticated, user, logout, loading } = useAuth(); // Use the auth hook
+  const { isAuthenticated, user, logout, loading } = useAuth();
 
   if (loading) {
     // Optionally render a loading spinner or null while auth state is being determined
-    return null; 
+    return null;
   }
 
   return (
@@ -36,6 +37,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             <span className="text-xl font-bold text-primary">Polaris AI</span>
           </Link>
           <nav className="flex items-center space-x-4">
+            <ThemeToggle /> {/* Add ThemeToggle here */}
             {isAuthenticated && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
