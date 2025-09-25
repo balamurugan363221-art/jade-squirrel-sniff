@@ -10,7 +10,8 @@ import AuthForms from "./components/auth/AuthForms";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { ThemeProvider } from "./components/theme-provider"; // Import ThemeProvider
+import { ThemeProvider } from "./components/theme-provider";
+import Profile from "./pages/Profile"; // Import Profile
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme"> {/* Wrap with ThemeProvider */}
+          <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <MainLayout>
               <Routes>
                 <Route path="/" element={<Index />} />
@@ -33,6 +34,15 @@ const App = () => (
                   element={
                     <ProtectedRoute>
                       <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* Protected Profile Route */}
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
                     </ProtectedRoute>
                   }
                 />

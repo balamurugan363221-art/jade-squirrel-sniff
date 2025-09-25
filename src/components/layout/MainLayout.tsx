@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Brain, LogOut, User } from 'lucide-react';
+import { Brain, LogOut, User as UserIcon } from 'lucide-react'; // Alias User to UserIcon to avoid conflict
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/context/AuthContext';
-import ThemeToggle from '@/components/ThemeToggle'; // Import ThemeToggle
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -37,7 +37,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             <span className="text-xl font-bold text-primary">Polaris AI</span>
           </Link>
           <nav className="flex items-center space-x-4">
-            <ThemeToggle /> {/* Add ThemeToggle here */}
+            <ThemeToggle />
             {isAuthenticated && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -58,6 +58,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">
+                      <UserIcon className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
