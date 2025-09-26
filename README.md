@@ -1,1 +1,2 @@
-# Welcome to your Dyad app
+welcome to ai study buddy 
+
